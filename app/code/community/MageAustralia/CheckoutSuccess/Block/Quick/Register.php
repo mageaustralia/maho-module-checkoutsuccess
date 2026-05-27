@@ -46,6 +46,7 @@ class MageAustralia_CheckoutSuccess_Block_Quick_Register extends MageAustralia_C
         );
     }
 
+    #[\Override]
     public function getFormKey(): string
     {
         return (string) Mage::getSingleton('core/session')->getFormKey();

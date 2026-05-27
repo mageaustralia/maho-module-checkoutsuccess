@@ -116,6 +116,9 @@ class MageAustralia_CheckoutSuccess_Helper_Data extends Mage_Core_Helper_Abstrac
     {
         // Crypt key is unique per install, persisted in app/etc/local.xml,
         // and already used by Maho for all symmetric-encryption needs.
+        // getNode() is inherited from Mage_Core_Model_Config_Base; not declared
+        // on the Mage_Core_Model_Config stub PHPStan sees.
+        /** @phpstan-ignore method.notFound */
         return (string) Mage::getConfig()->getNode('global/crypt/key');
     }
 

@@ -46,7 +46,6 @@ class MageAustralia_CheckoutSuccess_Model_Observer
             return;
         }
 
-        /** @var Mage_Sales_Model_Order $order */
         $order = Mage::getModel('sales/order')->loadByIncrementId($incrementId);
         if (!$order->getId()) {
             return;
@@ -94,7 +93,6 @@ class MageAustralia_CheckoutSuccess_Model_Observer
         if ($orderId === 0) {
             return;
         }
-        /** @var Mage_Sales_Model_Order $order */
         $order = Mage::getModel('sales/order')->load($orderId);
         if ($order->getId()) {
             Mage::register('current_order', $order, true);

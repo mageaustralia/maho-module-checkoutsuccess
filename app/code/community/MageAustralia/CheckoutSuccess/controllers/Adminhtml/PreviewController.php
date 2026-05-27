@@ -50,7 +50,6 @@ class MageAustralia_CheckoutSuccess_Adminhtml_PreviewController extends Mage_Adm
             ? Mage::app()->getDefaultStoreView()
             : Mage::app()->getStore($storeCode);
 
-        /** @var Mage_Sales_Model_Order $order */
         $order = Mage::getModel('sales/order')->loadByIncrementId($incrementId);
         if (!$order->getId()) {
             $this->getResponse()

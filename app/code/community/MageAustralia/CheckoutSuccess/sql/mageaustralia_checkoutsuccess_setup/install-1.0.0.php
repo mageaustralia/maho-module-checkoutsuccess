@@ -38,6 +38,9 @@ $defaults = [
 ];
 
 foreach ($defaults as $path => $value) {
+    // saveConfig() is inherited from Mage_Core_Model_Config_Base; not declared
+    // on the Mage_Core_Model_Config stub PHPStan sees.
+    /** @phpstan-ignore method.notFound */
     Mage::getConfig()->saveConfig($path, $value, 'default', 0);
 }
 

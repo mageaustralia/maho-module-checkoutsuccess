@@ -28,6 +28,15 @@ class MageAustralia_CheckoutSuccess_Block_Sales_Order_Info extends Mage_Sales_Bl
         return $h;
     }
 
+    /**
+     * Parent's declared return is non-null Mage_Sales_Model_Order, but
+     * Mage::registry('current_order') is itself effectively nullable in practice,
+     * and our success-page flow legitimately has no order yet during early
+     * lifecycle calls. _toHtml() / _prepareLayout() below guard on null so the
+     * block renders nothing rather than dereferencing a missing order.
+     *
+     * @phpstan-ignore return.type
+     */
     #[\Override]
     public function getOrder()
     {
@@ -38,11 +47,12 @@ class MageAustralia_CheckoutSuccess_Block_Sales_Order_Info extends Mage_Sales_Bl
 
         $orderId = (int) Mage::getSingleton('checkout/session')->getLastOrderId();
         if ($orderId === 0) {
+            /** @phpstan-ignore return.type */
             return $this->_orderCache = null;
         }
-        /** @var Mage_Sales_Model_Order $order */
         $order = Mage::getModel('sales/order')->load($orderId);
         $this->_orderCache = $order->getId() ? $order : null;
+        /** @phpstan-ignore return.type */
         return $this->_orderCache;
     }
 

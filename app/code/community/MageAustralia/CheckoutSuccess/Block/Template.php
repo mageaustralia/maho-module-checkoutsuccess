@@ -47,7 +47,6 @@ class MageAustralia_CheckoutSuccess_Block_Template extends Mage_Core_Block_Templ
             return $this->_orderCache = null;
         }
 
-        /** @var Mage_Sales_Model_Order $order */
         $order = Mage::getModel('sales/order')->load($orderId);
         $this->_orderCache = $order->getId() ? $order : null;
         return $this->_orderCache;

@@ -51,7 +51,6 @@ class MageAustralia_CheckoutSuccess_QuickController extends Mage_Core_Controller
             return;
         }
 
-        /** @var Mage_Sales_Model_Order $order */
         $order = Mage::getModel('sales/order')->load($orderId);
         $email = trim((string) $order->getCustomerEmail());
         if ($email === '') {

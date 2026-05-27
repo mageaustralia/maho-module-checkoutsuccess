@@ -88,6 +88,9 @@ class MageAustralia_CheckoutSuccess_Block_Adminhtml_System_Config_Form_Field_Fro
      */
     protected function _buildAdminSignUrl(): string
     {
+        // getNode() is inherited from Mage_Core_Model_Config_Base; not declared
+        // on the Mage_Core_Model_Config stub PHPStan sees.
+        /** @phpstan-ignore method.notFound */
         $adminFrontName = (string) Mage::getConfig()->getNode(
             'admin/routers/adminhtml/args/frontName',
         ) ?: 'admin';
