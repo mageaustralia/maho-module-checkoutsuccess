@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <mageaustralia_checkoutsuccess translate="title" module="mageaustralia_checkoutsuccess">
+                                        <title>Checkout Success Page</title>
+                                    </mageaustralia_checkoutsuccess>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

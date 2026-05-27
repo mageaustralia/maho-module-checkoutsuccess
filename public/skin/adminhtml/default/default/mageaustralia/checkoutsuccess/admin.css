@@ -1,0 +1,51 @@
+/* MageAustralia_CheckoutSuccess admin styling — per-slot sortable field. */
+
+.csl-sortable {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    max-width: 520px;
+    background: #fff;
+}
+
+.csl-sortable li {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.4em 0.6em;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+}
+
+.csl-sortable li:last-child {
+    border-bottom: 0;
+}
+
+.csl-sortable li.csl-dragging {
+    opacity: 0.45;
+}
+
+.csl-handle {
+    cursor: grab;
+    color: #999;
+    user-select: none;
+    font-size: 1.1em;
+    padding-right: 0.3em;
+}
+
+.csl-handle:active {
+    cursor: grabbing;
+}
+
+.csl-sortable label {
+    flex: 1;
+    cursor: pointer;
+    font-weight: normal;
+    margin: 0;
+}
+
+.csl-sortable input[type="checkbox"] {
+    margin-right: 0.5em;
+}

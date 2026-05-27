@@ -1,0 +1,70 @@
+<?php
+/**
+ * Maho
+ *
+ * @package    MageAustralia_CheckoutSuccess
+ * @copyright  Copyright (c) 2026 Maho Australia
+ * @license    https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *
+ * @var Mage_Checkout_Block_Onepage_Success $this
+ */
+
+/** @var MageAustralia_CheckoutSuccess_Helper_Data $helper */
+$helper = Mage::helper('mageaustralia_checkoutsuccess');
+?>
+<?php if (!$helper->isEnabled()): ?>
+    <?php /* Module turned off — fall back to the stock Magento template. */ ?>
+    <div class="page-title">
+        <h1><?php echo $this->__('Your order has been received') ?></h1>
+    </div>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    <h4><?php echo $this->__('Thank you for your purchase!') ?></h4>
+    <?php if ($this->getOrderId()): ?>
+        <p class="well well-sm a-center">
+            <?php echo $this->__('Your order # is: %s.', $this->escapeHtml($this->getOrderId())) ?>
+        </p>
+    <?php endif; ?>
+    <?php return; ?>
+<?php endif; ?>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+<?php $slotTop = $helper->getSlotBlocks('top'); ?>
+<div class="checkoutsuccess-top">
+    <?php foreach ($slotTop as $childName): ?>
+        <div class="checkoutsuccess-block-wrapper">
+            <?php echo $this->getChildHtml($childName) ?>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<div class="checkoutsuccess-middle">
+    <div class="checkoutsuccess-middleleft">
+        <?php foreach ($helper->getSlotBlocks('middleleft') as $childName): ?>
+            <div class="checkoutsuccess-block-wrapper">
+                <?php echo $this->getChildHtml($childName) ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <div class="checkoutsuccess-middleright">
+        <?php foreach ($helper->getSlotBlocks('middleright') as $childName): ?>
+            <div class="checkoutsuccess-block-wrapper">
+                <?php echo $this->getChildHtml($childName) ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<div class="checkoutsuccess-bottom">
+    <?php foreach ($helper->getSlotBlocks('bottom') as $childName): ?>
+        <div class="checkoutsuccess-block-wrapper">
+            <?php echo $this->getChildHtml($childName) ?>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<?php if ($bottomId = $helper->getBottomCmsBlockId()): ?>
+    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId($bottomId)->toHtml() ?>
+<?php endif; ?>
+
+<?php echo $this->getChildHtml('checkoutsuccess.html.bottom') ?>

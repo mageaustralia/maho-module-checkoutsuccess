@@ -1,0 +1,47 @@
+<?php
+/**
+ * Maho
+ *
+ * @package    MageAustralia_CheckoutSuccess
+ * @copyright  Copyright (c) 2026 Maho Australia
+ * @license    https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *
+ * @var MageAustralia_CheckoutSuccess_Block_Sales_Order_View $this
+ */
+$order = $this->getOrder();
+if (!$order) {
+    return;
+}
+$tracksCount = 0;
+$tracks = $order->getTracksCollection();
+if ($tracks) {
+    $tracksCount = (int) $tracks->count();
+}
+?>
+<div class="order-items order-details">
+    <h2 class="table-caption">
+        <?php echo $this->__('Items Ordered') ?>
+        <?php if ($tracksCount > 0): ?>
+            <span class="separator">|</span>
+            <a href="<?php echo $this->escapeHtml($this->helper('shipping')->getTrackingPopupUrlBySalesModel($order)) ?>"
+               target="_blank" rel="noopener" title="<?php echo $this->escapeHtml($this->__('Track your order')) ?>">
+                <?php echo $this->__('Track your order') ?>
+            </a>
+        <?php endif; ?>
+    </h2>
+
+    <?php echo $this->getChildHtml('order_items') ?>
+
+    <?php $history = $order->getVisibleStatusHistory(); ?>
+    <?php if (!empty($history)): ?>
+        <div class="order-additional order-comments">
+            <h2 class="sub-title"><?php echo $this->__('About Your Order') ?></h2>
+            <dl class="order-about">
+                <?php foreach ($history as $h): ?>
+                    <dt><?php echo $this->formatDate($h->getCreatedAtStoreDate(), 'medium', true) ?></dt>
+                    <dd><?php echo $this->escapeHtml((string) $h->getComment()) ?></dd>
+                <?php endforeach; ?>
+            </dl>
+        </div>
+    <?php endif; ?>
+</div>

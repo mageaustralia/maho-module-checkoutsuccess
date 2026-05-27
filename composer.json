@@ -1,0 +1,20 @@
+{
+    "name": "mageaustralia/maho-module-checkoutsuccess",
+    "license": "BSD-2-Clause",
+    "type": "maho-module",
+    "description": "Configurable checkout success page for Maho. Four-slot layout (top / middle-left / middle-right / bottom), per-slot sortable block picker, thank-you panel, guest quick-register CTA, order details + addresses, recurring profile schedule, CMS blocks above/below the grid, and a custom HTML/tracking-snippet box with order-variable substitution. Includes a signed admin preview that renders the success page for any historical order.",
+    "keywords": ["maho", "checkout", "success", "thank-you", "post-purchase", "conversion", "tracking", "cms-block"],
+    "authors": [
+        {
+            "name": "Mage Australia",
+            "homepage": "https://mageaustralia.com.au"
+        }
+    ],
+    "require": {
+        "php": ">=8.3",
+        "mahocommerce/maho": "^26.5"
+    },
+    "extra": {
+        "maho-module-dir": "app/code/community/MageAustralia/CheckoutSuccess"
+    }
+}

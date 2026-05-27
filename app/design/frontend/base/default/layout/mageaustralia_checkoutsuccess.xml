@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Maho
+ *
+ * @package    MageAustralia_CheckoutSuccess
+ * @copyright  Copyright (c) 2026 Maho Australia
+ * @license    https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<layout version="0.1.0">
+    <!--
+      Override the core success block's template + register every module-owned
+      block as a child of checkout.success. The container template walks the
+      slot config and calls getChildHtml(<block_name>) for each, so layout
+      order here doesn't matter — slot config defines display order.
+
+      Disabled state: container template short-circuits and falls back to a
+      plain stock-style success message. No need to gate the layout updates.
+    -->
+    <checkout_onepage_success>
+        <reference name="head">
+            <!-- ifconfig: only load when the module is on. Zero CSS overhead
+                 on stores that don't enable the new success page. -->
+            <action method="addItem" ifconfig="mageaustralia_checkoutsuccess/general/enabled">
+                <type>skin_css</type>
+                <name>css/mageaustralia/checkoutsuccess.css</name>
+            </action>
+        </reference>
+
+        <reference name="checkout.success">
+            <action method="setTemplate">
+                <template>mageaustralia/checkoutsuccess/success.phtml</template>
+            </action>
+
+            <block type="mageaustralia_checkoutsuccess/thankYou"
+                   name="checkoutsuccess.thank.you"
+                   template="mageaustralia/checkoutsuccess/success/thank-you.phtml"/>
+
+            <block type="mageaustralia_checkoutsuccess/quick_register"
+                   name="checkoutsuccess.quick.register"
+                   template="mageaustralia/checkoutsuccess/customer/quick/register.phtml"/>
+
+            <block type="mageaustralia_checkoutsuccess/sales_order_view"
+                   name="sales.order.view"
+                   template="mageaustralia/checkoutsuccess/sales/order/view.phtml">
+                <!--
+                  Items child block. Template MUST be set here — the parent
+                  Mage_Sales_Block_Items_Abstract::_construct() doesn't pick
+                  a default, so omitting it results in an empty render.
+                -->
+                <block type="sales/order_items" name="order_items" as="order_items"
+                       template="sales/order/items.phtml">
+                    <action method="addItemRender">
+                        <type>default</type>
+                        <block>sales/order_item_renderer_default</block>
+                        <template>sales/order/items/renderer/default.phtml</template>
+                    </action>
+                    <action method="addItemRender">
+                        <type>grouped</type>
+                        <block>sales/order_item_renderer_grouped</block>
+                        <template>sales/order/items/renderer/default.phtml</template>
+                    </action>
+                    <action method="addItemRender">
+                        <type>configurable</type>
+                        <block>sales/order_item_renderer_configurable</block>
+                        <template>sales/order/items/renderer/default.phtml</template>
+                    </action>
+                    <action method="addItemRender">
+                        <type>bundle</type>
+                        <block>bundle/sales_order_items_renderer</block>
+                        <template>bundle/sales/order/items/renderer.phtml</template>
+                    </action>
+                    <!--
+                      Module-owned line-item renderer (template path is
+                      under our module namespace so external observers
+                      that swap the stock renderer template by exact path
+                      don't accidentally rewrite ours). Whether the
+                      thumbnail itself shows is controlled by the
+                      general/show_thumbnails config at render time.
+                    -->
+                    <action method="addItemRender">
+                        <type>default</type>
+                        <block>sales/order_item_renderer_default</block>
+                        <template>mageaustralia/checkoutsuccess/sales/order/items/renderer/default.phtml</template>
+                    </action>
+                    <action method="addItemRender">
+                        <type>grouped</type>
+                        <block>sales/order_item_renderer_grouped</block>
+                        <template>mageaustralia/checkoutsuccess/sales/order/items/renderer/default.phtml</template>
+                    </action>
+                    <block type="sales/order_totals" name="order_totals"
+                           template="sales/order/totals.phtml">
+                        <action method="setLabelProperties">
+                            <value>colspan="4" class="a-right"</value>
+                        </action>
+                        <action method="setValueProperties">
+                            <value>class="last a-right"</value>
+                        </action>
+                        <block type="tax/sales_order_tax" name="tax" template="tax/order/tax.phtml"/>
+                    </block>
+                </block>
+            </block>
+
+            <block type="mageaustralia_checkoutsuccess/sales_order_info"
+                   name="sales.order.info"
+                   template="mageaustralia/checkoutsuccess/sales/order/info.phtml"/>
+
+            <block type="mageaustralia_checkoutsuccess/additional"
+                   name="checkoutsuccess.additional"
+                   template="mageaustralia/checkoutsuccess/success/additional.phtml"/>
+
+            <block type="mageaustralia_checkoutsuccess/sales_recurring_profile_schedule"
+                   name="sales.recurring.profile.schedule"
+                   template="mageaustralia/checkoutsuccess/sales/recurring/profile/view/section.phtml"/>
+
+            <block type="mageaustralia_checkoutsuccess/html_bottom"
+                   name="checkoutsuccess.html.bottom"/>
+        </reference>
+    </checkout_onepage_success>
+</layout>

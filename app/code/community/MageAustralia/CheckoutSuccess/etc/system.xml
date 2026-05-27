@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Maho
+ *
+ * @package    MageAustralia_CheckoutSuccess
+ * @copyright  Copyright (c) 2026 Maho Australia
+ * @license    https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <sections>
+        <mageaustralia_checkoutsuccess translate="label" module="mageaustralia_checkoutsuccess">
+            <label>Checkout Success Page</label>
+            <tab>sales</tab>
+            <sort_order>1978</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+
+                <!-- ====================== GENERAL ====================== -->
+                <general translate="label">
+                    <label>General</label>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </enabled>
+                        <detailed_info translate="label comment">
+                            <label>Show full addresses</label>
+                            <comment>No = compact "Name, City" summary. Yes = full multi-line address block.</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </detailed_info>
+                        <show_thumbnails translate="label comment">
+                            <label>Show product thumbnails in items table</label>
+                            <comment>When enabled, each line item shows a 90x90 product thumbnail before the name.</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </show_thumbnails>
+                        <block_top translate="label comment">
+                            <label>CMS Block above the grid</label>
+                            <comment>Rendered above the slot grid. -- None -- = nothing rendered.</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>mageaustralia_checkoutsuccess/source_cmsBlock</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </block_top>
+                        <block_bottom translate="label comment">
+                            <label>CMS Block below the grid</label>
+                            <comment>Rendered below the slot grid but above the bottom HTML / Continue button.</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>mageaustralia_checkoutsuccess/source_cmsBlock</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </block_bottom>
+                        <bottom_html translate="label comment">
+                            <label>Custom HTML at the bottom</label>
+                            <comment><![CDATA[Raw HTML/JS appended after the success page. Supports variable substitution: <code>{{orderId}}</code>, <code>{{orderIncrementId}}</code>, <code>{{orderAmount}}</code>, <code>{{customerEmail}}</code>. Typical use: drop a GA / Meta / generic conversion-tracking snippet here.]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </bottom_html>
+                    </fields>
+                </general>
+
+                <!-- ====================== MOCKUP (BOARD) ====================== -->
+                <mockup translate="label comment">
+                    <label>Block Layout</label>
+                    <comment>Pick which blocks appear in each slot of the success page. Drag handles reorder blocks within a slot.</comment>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <slot_top translate="label">
+                            <label>Top slot</label>
+                            <frontend_model>mageaustralia_checkoutsuccess/adminhtml_system_config_form_field_sortableBlocks</frontend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </slot_top>
+                        <slot_middleleft translate="label">
+                            <label>Middle-left slot</label>
+                            <frontend_model>mageaustralia_checkoutsuccess/adminhtml_system_config_form_field_sortableBlocks</frontend_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </slot_middleleft>
+                        <slot_middleright translate="label">
+                            <label>Middle-right slot</label>
+                            <frontend_model>mageaustralia_checkoutsuccess/adminhtml_system_config_form_field_sortableBlocks</frontend_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </slot_middleright>
+                        <slot_bottom translate="label">
+                            <label>Bottom slot</label>
+                            <frontend_model>mageaustralia_checkoutsuccess/adminhtml_system_config_form_field_sortableBlocks</frontend_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </slot_bottom>
+                        <heading_preview translate="label">
+                            <label>Preview</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </heading_preview>
+                        <preview translate="label comment">
+                            <label>Order # to preview</label>
+                            <comment>Enter an existing order number to render the success page for it. Saves config first, then loads the page in an iframe below.</comment>
+                            <frontend_model>mageaustralia_checkoutsuccess/adminhtml_system_config_form_field_frontendPreview</frontend_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </preview>
+                    </fields>
+                </mockup>
+
+                <!-- ====================== MOCKUPSETS (4 CMS slots) ====================== -->
+                <mockupsets translate="label comment">
+                    <label>Additional CMS Blocks</label>
+                    <comment>CMS blocks rendered inside the "Additional" block. Set to -- None -- to skip.</comment>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <block1 translate="label"><label>CMS Block #1</label><frontend_type>select</frontend_type>
+                            <source_model>mageaustralia_checkoutsuccess/source_cmsBlock</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </block1>
+                        <block2 translate="label"><label>CMS Block #2</label><frontend_type>select</frontend_type>
+                            <source_model>mageaustralia_checkoutsuccess/source_cmsBlock</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </block2>
+                        <block3 translate="label"><label>CMS Block #3</label><frontend_type>select</frontend_type>
+                            <source_model>mageaustralia_checkoutsuccess/source_cmsBlock</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </block3>
+                        <block4 translate="label"><label>CMS Block #4</label><frontend_type>select</frontend_type>
+                            <source_model>mageaustralia_checkoutsuccess/source_cmsBlock</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default><show_in_website>1</show_in_website><show_in_store>1</show_in_store>
+                        </block4>
+                    </fields>
+                </mockupsets>
+
+            </groups>
+        </mageaustralia_checkoutsuccess>
+    </sections>
+</config>

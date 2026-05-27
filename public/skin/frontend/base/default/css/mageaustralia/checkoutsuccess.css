@@ -1,0 +1,70 @@
+/**
+ * MageAustralia_CheckoutSuccess — frontend styling for the success page grid.
+ *
+ * Two-column middle grid (left = thank-you + CMS, right = order summary),
+ * full-width top + bottom rows, mobile-collapses to a single column under 767px.
+ */
+
+.thank-you-note .check-mark {
+    width: 80px;
+    height: 80px;
+    margin: 20px auto 40px;
+    display: block;
+}
+
+.thank-you-note .check-mark .circle,
+.thank-you-note .check-mark .check {
+    stroke: #34a46c;
+    stroke-width: 4px;
+}
+
+.thank-you-note .sub-title,
+.quick-account-create h2,
+.order-items h2,
+.order-info,
+.main-container .block-highlight .block-title,
+.main-container .block .block-title {
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: normal;
+    border: none;
+    padding: 0;
+    line-height: 30px;
+    background: none;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.checkoutsuccess-block-wrapper {
+    margin-bottom: 40px;
+}
+
+.checkoutsuccess-top,
+.checkoutsuccess-middle,
+.checkoutsuccess-bottom {
+    display: block;
+    clear: both;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.checkoutsuccess-middleleft,
+.checkoutsuccess-middleright {
+    width: 48%;
+}
+
+.checkoutsuccess-middleleft {
+    float: left;
+}
+
+.checkoutsuccess-middleright {
+    float: right;
+}
+
+@media (max-width: 767px) {
+    .checkoutsuccess-middleleft,
+    .checkoutsuccess-middleright {
+        width: 100%;
+        float: none;
+    }
+}

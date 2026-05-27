@@ -1,0 +1,50 @@
+<?php
+/**
+ * Maho
+ *
+ * @package    MageAustralia_CheckoutSuccess
+ * @copyright  Copyright (c) 2026 Maho Australia
+ * @license    https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *
+ * @var MageAustralia_CheckoutSuccess_Block_ThankYou $this
+ */
+$order = $this->getOrder();
+?>
+<div class="thank-you-note">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2" class="check-mark">
+        <circle class="path circle" fill="none" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"></circle>
+        <polyline class="path check" fill="none" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "></polyline>
+    </svg>
+
+    <h2 class="sub-title"><?php echo $this->__('Thank you for your purchase!') ?></h2>
+
+    <?php if ($order): ?>
+        <p><?php echo $this->__('You will receive an order confirmation email with details of your order.') ?></p>
+
+        <?php if ($this->canViewOrder()): ?>
+            <p><?php echo $this->__(
+                'Your order # is: %s.',
+                sprintf(
+                    '<a href="%s">%s</a>',
+                    $this->escapeHtml($this->getViewOrderUrl()),
+                    $this->escapeHtml($order->getIncrementId()),
+                ),
+            ) ?></p>
+            <p>
+                <?php echo $this->__(
+                    'Click <a href="%s" onclick="this.target=\'_blank\'">here to print</a> a copy of your order confirmation.',
+                    $this->escapeHtml($this->getPrintUrl()),
+                ) ?>
+            </p>
+        <?php else: ?>
+            <p><?php echo $this->__('Your order # is: %s.', $this->escapeHtml($order->getIncrementId())) ?></p>
+        <?php endif; ?>
+    <?php endif; ?>
+
+    <?php /* The general/block_top CMS block renders inside the thank-you
+            panel — FAQs, delivery times, post-purchase CTAs, etc.
+            Admin-controlled via System Config. */ ?>
+    <?php if ($topId = $this->getSuccessHelper()->getTopCmsBlockId()): ?>
+        <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId($topId)->toHtml() ?>
+    <?php endif; ?>
+</div>

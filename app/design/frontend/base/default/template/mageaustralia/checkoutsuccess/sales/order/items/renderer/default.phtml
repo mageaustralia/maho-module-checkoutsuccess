@@ -1,0 +1,140 @@
+<?php
+/**
+ * Maho
+ *
+ * @package    MageAustralia_CheckoutSuccess
+ * @copyright  Copyright (c) 2026 Maho Australia
+ * @license    https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *
+ * Self-contained line-item renderer. Uses the order item's already-computed
+ * price columns (row_total / row_total_incl_tax) rather than re-invoking the
+ * checkout helper — keeps us independent of any helper rewrites on the store.
+ *
+ * @var Mage_Sales_Block_Order_Item_Renderer_Default $this
+ */
+$_item = $this->getItem();
+
+/** @var MageAustralia_CheckoutSuccess_Helper_Data $_helper */
+$_helper = Mage::helper('mageaustralia_checkoutsuccess');
+$_showThumb = $_helper->showThumbnails();
+
+$_imgUrl = '';
+if ($_showThumb) {
+    $_product = Mage::getModel('catalog/product')->load((int) $_item->getProductId());
+    $_imgUrl = $_product->getId()
+        ? (string) Mage::helper('catalog/image')->init($_product, 'thumbnail')->resize(90, 90)
+        : (string) Mage::getDesign()->getSkinUrl('images/catalog/product/placeholder/thumbnail.jpg');
+}
+
+$_order = $this->getOrder();
+$_taxHelper = $this->helper('tax');
+$_store = $_order->getStore();
+
+/* Per-unit incl-tax price: prefer the dedicated column, fall back to
+ * row_total_incl_tax / qty when the import path didn't populate the
+ * per-row field (common for legacy or out-of-band order imports). Same
+ * fallback for the excl-tax side. */
+$_qtyOrdered = max(1.0, (float) $_item->getQtyOrdered());
+$_priceExcl = (float) $_item->getPrice();
+if ($_priceExcl <= 0 && $_item->getRowTotal() > 0) {
+    $_priceExcl = (float) $_item->getRowTotal() / $_qtyOrdered;
+}
+$_priceIncl = (float) $_item->getPriceInclTax();
+if ($_priceIncl <= 0 && $_item->getRowTotalInclTax() > 0) {
+    $_priceIncl = (float) $_item->getRowTotalInclTax() / $_qtyOrdered;
+}
+?>
+<tr class="border" id="order-item-row-<?php echo (int) $_item->getId() ?>">
+    <td>
+        <?php if ($_showThumb && $_imgUrl !== ''): ?>
+            <img src="<?php echo $this->escapeHtml($_imgUrl) ?>" height="90" alt=""
+                 align="left" style="padding-right:2px;"/>
+        <?php endif; ?>
+        <h3 class="product-name"><?php echo $this->escapeHtml($_item->getName()) ?></h3>
+
+        <?php if ($_options = $this->getItemOptions()): ?>
+            <dl class="item-options">
+                <?php foreach ($_options as $_option): ?>
+                    <dt><?php echo $this->escapeHtml($_option['label']) ?></dt>
+                    <?php $_fv = $this->getFormatedOptionValue($_option) ?>
+                    <dd<?php if (isset($_fv['full_view'])): ?> class="truncated"<?php endif; ?>>
+                        <?php echo $_fv['value'] ?>
+                        <?php if (isset($_fv['full_view'])): ?>
+                            <div class="truncated_full_value">
+                                <dl class="item-options">
+                                    <dt><?php echo $this->escapeHtml($_option['label']) ?></dt>
+                                    <dd><?php echo $_fv['full_view'] ?></dd>
+                                </dl>
+                            </div>
+                        <?php endif; ?>
+                    </dd>
+                <?php endforeach; ?>
+            </dl>
+        <?php endif; ?>
+
+        <?php if ($addInfoBlock = $this->getProductAdditionalInformationBlock()): ?>
+            <?php echo $addInfoBlock->setItem($_item)->toHtml() ?>
+        <?php endif; ?>
+
+        <?php if ($_item->getDescription()): ?>
+            <?php echo $this->escapeHtml((string) $_item->getDescription()) ?>
+        <?php endif; ?>
+    </td>
+
+    <td><?php echo $this->escapeHtml($_item->getSku()) ?></td>
+
+    <td class="a-right">
+        <?php if ($_taxHelper->displaySalesPriceExclTax($_store) || $_taxHelper->displaySalesBothPrices($_store)): ?>
+            <span class="price-excl-tax">
+                <?php if ($_taxHelper->displaySalesBothPrices($_store)): ?>
+                    <span class="cart-price"><?php echo $this->__('Excl. Tax') ?>:</span><br/>
+                <?php endif; ?>
+                <span class="cart-price"><?php echo $_order->formatPrice($_priceExcl) ?></span>
+            </span>
+        <?php endif; ?>
+        <?php if ($_taxHelper->displaySalesPriceInclTax($_store) || $_taxHelper->displaySalesBothPrices($_store)): ?>
+            <span class="price-incl-tax">
+                <?php if ($_taxHelper->displaySalesBothPrices($_store)): ?>
+                    <span class="cart-price"><?php echo $this->__('Incl. Tax') ?>:</span><br/>
+                <?php endif; ?>
+                <span class="cart-price"><?php echo $_order->formatPrice($_priceIncl) ?></span>
+            </span>
+        <?php endif; ?>
+    </td>
+
+    <td class="a-right">
+        <span class="nobr">
+            <?php if ($_item->getQtyOrdered() > 0): ?>
+                <?php echo $this->__('Ordered') ?>: <strong><?php echo (int) $_item->getQtyOrdered() ?></strong><br/>
+            <?php endif; ?>
+            <?php if ($_item->getQtyShipped() > 0): ?>
+                <?php echo $this->__('Shipped') ?>: <strong><?php echo (int) $_item->getQtyShipped() ?></strong><br/>
+            <?php endif; ?>
+            <?php if ($_item->getQtyCanceled() > 0): ?>
+                <?php echo $this->__('Canceled') ?>: <strong><?php echo (int) $_item->getQtyCanceled() ?></strong><br/>
+            <?php endif; ?>
+            <?php if ($_item->getQtyRefunded() > 0): ?>
+                <?php echo $this->__('Refunded') ?>: <strong><?php echo (int) $_item->getQtyRefunded() ?></strong><br/>
+            <?php endif; ?>
+        </span>
+    </td>
+
+    <td class="a-right last">
+        <?php if ($_taxHelper->displaySalesSubtotalExclTax($_store) || $_taxHelper->displaySalesSubtotalBoth($_store)): ?>
+            <span class="price-excl-tax">
+                <?php if ($_taxHelper->displaySalesSubtotalBoth($_store)): ?>
+                    <span class="cart-price"><?php echo $this->__('Excl. Tax') ?>:</span><br/>
+                <?php endif; ?>
+                <span class="cart-price"><?php echo $_order->formatPrice((float) $_item->getRowTotal()) ?></span>
+            </span>
+        <?php endif; ?>
+        <?php if ($_taxHelper->displaySalesSubtotalInclTax($_store) || $_taxHelper->displaySalesSubtotalBoth($_store)): ?>
+            <span class="price-incl-tax">
+                <?php if ($_taxHelper->displaySalesSubtotalBoth($_store)): ?>
+                    <span class="cart-price"><?php echo $this->__('Incl. Tax') ?>:</span><br/>
+                <?php endif; ?>
+                <span class="cart-price"><?php echo $_order->formatPrice((float) $_item->getRowTotalInclTax()) ?></span>
+            </span>
+        <?php endif; ?>
+    </td>
+</tr>

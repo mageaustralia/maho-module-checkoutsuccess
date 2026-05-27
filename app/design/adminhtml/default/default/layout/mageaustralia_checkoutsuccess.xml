@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Maho
+ *
+ * @package    MageAustralia_CheckoutSuccess
+ * @copyright  Copyright (c) 2026 Maho Australia
+ * @license    https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<layout version="0.1.0">
+    <!--
+      Load the sortable-blocks JS + CSS on every system-config edit screen.
+      The JS only activates when it finds the matching #csl-* DOM IDs, so
+      loading it broadly costs ~1KB of network and zero runtime elsewhere.
+    -->
+    <adminhtml_system_config_edit>
+        <reference name="head">
+            <action method="addJs">
+                <script>mageaustralia/checkoutsuccess/sortable.js</script>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>mageaustralia/checkoutsuccess/admin.css</name>
+            </action>
+        </reference>
+    </adminhtml_system_config_edit>
+</layout>
