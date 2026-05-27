@@ -9,7 +9,7 @@ Replaces the spartan stock success page (order number link + Continue Shopping b
 - PHP 8.3+, strict types throughout, modern Maho attribute observers/routes
 - No Prototype, no Zend, no Varien_Data on JS — vanilla ES2017 only
 - One database-free `install` (pure config), zero schema changes
-- BSD-2-Clause
+- OSL-3.0 (matches the Maho core base)
 
 ## Install
 
