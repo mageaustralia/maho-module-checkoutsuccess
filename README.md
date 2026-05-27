@@ -4,6 +4,8 @@ A configurable, modular checkout success page for [Maho](https://github.com/maho
 
 Replaces the spartan stock success page (order number link + Continue Shopping button) with a four-slot board layout the admin can compose: thank-you banner, line items + totals, shipping/billing addresses, guest quick-register CTA, recurring profile schedule, four CMS-block slots, and a custom HTML/tracking-snippet box with order-variable substitution. Includes a signed admin preview that renders the success page for any historical order.
 
+![Frontend success page](docs/screenshots/frontend-success-page.png)
+
 - PHP 8.3+, strict types throughout, modern Maho attribute observers/routes
 - No Prototype, no Zend, no Varien_Data on JS — vanilla ES2017 only
 - One database-free `install` (pure config), zero schema changes
