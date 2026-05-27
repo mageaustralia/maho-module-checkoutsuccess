@@ -13,9 +13,7 @@ if (!$order) {
     return;
 }
 ?>
-<dl class="order-info">
-    <dt><?php echo $this->__('About This Order:') ?></dt>
-</dl>
+<h2 class="order-info-title"><?php echo $this->__('About This Order') ?></h2>
 <p class="order-date">
     <?php echo $this->__('Order Date: %s', $this->formatDate($order->getCreatedAtStoreDate(), 'long')) ?>
 </p>
