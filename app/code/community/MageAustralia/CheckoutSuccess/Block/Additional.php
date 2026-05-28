@@ -38,7 +38,7 @@ class MageAustralia_CheckoutSuccess_Block_Additional extends MageAustralia_Check
         return $out;
     }
 
-    #[\Override]
+    #[Override]
     protected function _toHtml()
     {
         if (!$this->isEnabled() || empty($this->getRenderedBlocks())) {

@@ -15,7 +15,7 @@ declare(strict_types=1);
  * gate and an `getOrder()` accessor that resolves from checkout/session.
  *
  * Preview mode: when the admin preview observer has primed the session with
- * a specific order, getOrder() picks it up automatically — no special-case
+ * a specific order, getOrder() picks it up automatically - no special-case
  * logic in subclasses.
  */
 class MageAustralia_CheckoutSuccess_Block_Template extends Mage_Core_Block_Template
@@ -56,7 +56,7 @@ class MageAustralia_CheckoutSuccess_Block_Template extends Mage_Core_Block_Templ
      * Short-circuit rendering when the module is disabled. Subclasses that
      * need different gating can override.
      */
-    #[\Override]
+    #[Override]
     protected function _toHtml()
     {
         if (!$this->isEnabled()) {

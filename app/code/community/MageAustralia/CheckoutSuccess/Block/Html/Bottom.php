@@ -13,13 +13,13 @@ declare(strict_types=1);
 /**
  * Renders the bottom_html config value with variable substitution. Typically
  * used to drop GA conversion / Meta pixel / generic tracking snippets onto
- * the success page without editing a template. Output is rendered raw —
+ * the success page without editing a template. Output is rendered raw -
  * substitution only swaps {{token}} placeholders, it does not escape the
  * surrounding markup.
  */
 class MageAustralia_CheckoutSuccess_Block_Html_Bottom extends MageAustralia_CheckoutSuccess_Block_Template
 {
-    #[\Override]
+    #[Override]
     protected function _toHtml()
     {
         if (!$this->isEnabled()) {

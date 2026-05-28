@@ -19,10 +19,9 @@ declare(strict_types=1);
  * codes. A small vanilla-JS controller (sortable.js) keeps the hidden
  * input in sync as the admin checks/unchecks/reorders.
  */
-class MageAustralia_CheckoutSuccess_Block_Adminhtml_System_Config_Form_Field_SortableBlocks
-    extends Mage_Adminhtml_Block_System_Config_Form_Field
+class MageAustralia_CheckoutSuccess_Block_Adminhtml_System_Config_Form_Field_SortableBlocks extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
-    #[\Override]
+    #[Override]
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element): string
     {
         /** @var MageAustralia_CheckoutSuccess_Model_Source_AvailableBlocks $source */
@@ -32,7 +31,7 @@ class MageAustralia_CheckoutSuccess_Block_Adminhtml_System_Config_Form_Field_Sor
         $selectedCsv = (string) $element->getValue();
         $selected = $selectedCsv === ''
             ? []
-            : array_values(array_filter(array_map('trim', explode(',', $selectedCsv))));
+            : array_values(array_filter(array_map(trim(...), explode(',', $selectedCsv))));
 
         // Index available by code for ordered lookup.
         $byCode = [];

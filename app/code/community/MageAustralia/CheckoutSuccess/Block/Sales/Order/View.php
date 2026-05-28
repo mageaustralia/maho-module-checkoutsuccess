@@ -13,7 +13,7 @@ declare(strict_types=1);
 /**
  * Order line items + totals on the success page. Subclasses the core
  * Mage_Sales_Block_Order_Items so the existing items/totals renderers
- * work — the only customisation is sourcing the order from checkout/session
+ * work - the only customisation is sourcing the order from checkout/session
  * rather than the customer's order history.
  */
 class MageAustralia_CheckoutSuccess_Block_Sales_Order_View extends Mage_Sales_Block_Order_Items
@@ -37,7 +37,7 @@ class MageAustralia_CheckoutSuccess_Block_Sales_Order_View extends Mage_Sales_Bl
      *
      * @phpstan-ignore return.type
      */
-    #[\Override]
+    #[Override]
     public function getOrder()
     {
         if ($this->_orderResolved) {
@@ -64,9 +64,9 @@ class MageAustralia_CheckoutSuccess_Block_Sales_Order_View extends Mage_Sales_Bl
      * empty table. We register here so everything downstream finds it.
      *
      * Also short-circuits the parent's _prepareLayout when there's no
-     * order in session — otherwise the parent dereferences null.
+     * order in session - otherwise the parent dereferences null.
      */
-    #[\Override]
+    #[Override]
     protected function _prepareLayout()
     {
         $order = $this->getOrder();
@@ -81,7 +81,7 @@ class MageAustralia_CheckoutSuccess_Block_Sales_Order_View extends Mage_Sales_Bl
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function _toHtml()
     {
         if (!$this->getSuccessHelper()->isEnabled() || !$this->getOrder()) {

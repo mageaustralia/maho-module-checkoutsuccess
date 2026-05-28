@@ -15,7 +15,7 @@ declare(strict_types=1);
  * Module ships in the "disabled" state; the admin opts in by flipping
  * general/enabled.
  *
- * No schema changes — module is pure config + code.
+ * No schema changes - module is pure config + code.
  *
  * @var Mage_Core_Model_Resource_Setup $this
  */

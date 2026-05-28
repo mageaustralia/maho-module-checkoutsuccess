@@ -71,7 +71,7 @@ class MageAustralia_CheckoutSuccess_Helper_Data extends Mage_Core_Helper_Abstrac
         if ($csv === '') {
             return [];
         }
-        return array_values(array_filter(array_map('trim', explode(',', $csv))));
+        return array_values(array_filter(array_map(trim(...), explode(',', $csv))));
     }
 
     /**
@@ -89,10 +89,10 @@ class MageAustralia_CheckoutSuccess_Helper_Data extends Mage_Core_Helper_Abstrac
      * Sign a preview order increment_id so the frontend success-page
      * observer can verify the admin intentionally generated the URL,
      * without needing access to the admin session (sessions are
-     * area-scoped — admin login is not visible on frontend requests).
+     * area-scoped - admin login is not visible on frontend requests).
      *
      * 8 hex chars of HMAC-SHA256 is plenty for a non-replayable
-     * authorisation check on a single increment_id — the secret is
+     * authorisation check on a single increment_id - the secret is
      * Mage's crypt key, which never leaves the server.
      */
     public function signPreviewId(string $incrementId): string

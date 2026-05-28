@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Maho\Config\Observer;
+
 /**
  * Maho
  *
@@ -22,12 +24,12 @@ declare(strict_types=1);
  * login state is invisible to frontend requests, so a session-based
  * gate would always fail. The HMAC is signed by the admin field at URL-
  * generation time with the install's crypt key (which only the server
- * holds), so a leaked URL is the only attack surface — and that surface
+ * holds), so a leaked URL is the only attack surface - and that surface
  * only exposes one specific order, not arbitrary ones.
  */
 class MageAustralia_CheckoutSuccess_Model_Observer
 {
-    #[Maho\Config\Observer('controller_action_predispatch_checkout_onepage_success')]
+    #[Observer('controller_action_predispatch_checkout_onepage_success')]
     public function loadPreviewOrderIntoSession(\Maho\Event\Observer $observer): void
     {
         /** @var Mage_Core_Controller_Front_Action $action */
@@ -68,8 +70,8 @@ class MageAustralia_CheckoutSuccess_Model_Observer
         $checkoutSession->setLastSuccessQuoteId($quoteId);
 
         // Register the order globally now (before any block is constructed),
-        // so the core sales/order_items child block — which reads from
-        // Mage::registry('current_order') during its own _prepareLayout —
+        // so the core sales/order_items child block - which reads from
+        // Mage::registry('current_order') during its own _prepareLayout -
         // can see the order in time. Setting it later from our parent
         // block's _prepareLayout is too late for the child's init phase.
         Mage::register('current_order', $order, true);
@@ -78,12 +80,12 @@ class MageAustralia_CheckoutSuccess_Model_Observer
     /**
      * Mirror of the preview hook for genuine post-checkout requests. After
      * a real checkout, lastOrderId is in session but `current_order` is
-     * not registered until late in the controller flow — too late for the
+     * not registered until late in the controller flow - too late for the
      * items child block's getOrder() to resolve. Registering predispatch
      * keeps the rendering pipeline consistent between preview and real
      * success-page loads.
      */
-    #[Maho\Config\Observer('controller_action_predispatch_checkout_onepage_success')]
+    #[Observer('controller_action_predispatch_checkout_onepage_success')]
     public function registerCurrentOrderForRealCheckout(\Maho\Event\Observer $observer): void
     {
         if (Mage::registry('current_order')) {

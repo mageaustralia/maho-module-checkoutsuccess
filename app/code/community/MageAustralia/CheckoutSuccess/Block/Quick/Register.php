@@ -46,7 +46,7 @@ class MageAustralia_CheckoutSuccess_Block_Quick_Register extends MageAustralia_C
         );
     }
 
-    #[\Override]
+    #[Override]
     public function getFormKey(): string
     {
         return (string) Mage::getSingleton('core/session')->getFormKey();
@@ -68,7 +68,7 @@ class MageAustralia_CheckoutSuccess_Block_Quick_Register extends MageAustralia_C
     }
 
     /** Suppress output when the CTA shouldn't show. */
-    #[\Override]
+    #[Override]
     protected function _toHtml()
     {
         if (!$this->shouldShow()) {

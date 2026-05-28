@@ -37,7 +37,7 @@ class MageAustralia_CheckoutSuccess_Block_Sales_Order_Info extends Mage_Sales_Bl
      *
      * @phpstan-ignore return.type
      */
-    #[\Override]
+    #[Override]
     public function getOrder()
     {
         if ($this->_orderResolved) {
@@ -63,14 +63,14 @@ class MageAustralia_CheckoutSuccess_Block_Sales_Order_Info extends Mage_Sales_Bl
 
     /**
      * Parent block's _prepareLayout() touches getOrder()->getRealOrderId()
-     * unconditionally — would fatal when no order is in session. Skip when
+     * unconditionally - would fatal when no order is in session. Skip when
      * we have nothing to render.
      *
      * Also registers `current_order` (idempotently) so the payment-info
      * child block, which is created by parent::_prepareLayout via
      * Mage_Payment_Helper_Data::getInfoBlock, can find the order context.
      */
-    #[\Override]
+    #[Override]
     protected function _prepareLayout()
     {
         $order = $this->getOrder();
@@ -81,7 +81,7 @@ class MageAustralia_CheckoutSuccess_Block_Sales_Order_Info extends Mage_Sales_Bl
         return parent::_prepareLayout();
     }
 
-    #[\Override]
+    #[Override]
     protected function _toHtml()
     {
         if (!$this->getSuccessHelper()->isEnabled() || !$this->getOrder()) {

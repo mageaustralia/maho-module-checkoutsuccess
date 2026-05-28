@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Symfony\Component\Routing\RequestContext;
+use Maho\Routing\RouteCollectionBuilder;
+
 /**
  * Maho
  *
@@ -24,11 +27,9 @@ declare(strict_types=1);
  * verifies the signature and only then primes checkout/session with the
  * historical order's IDs. Without the signature, the URL is harmless.
  */
-class MageAustralia_CheckoutSuccess_Block_Adminhtml_System_Config_Form_Field_FrontendPreview
-    extends Mage_Adminhtml_Block_Abstract
-    implements Varien_Data_Form_Element_Renderer_Interface
+class MageAustralia_CheckoutSuccess_Block_Adminhtml_System_Config_Form_Field_FrontendPreview extends Mage_Adminhtml_Block_Abstract implements Varien_Data_Form_Element_Renderer_Interface
 {
-    #[\Override]
+    #[Override]
     public function render(Varien_Data_Form_Element_Abstract $element): string
     {
         $store = $this->_resolveStore();
@@ -40,14 +41,14 @@ class MageAustralia_CheckoutSuccess_Block_Adminhtml_System_Config_Form_Field_Fro
             '<tr id="row_%s">'
             . '<td class="label">%s</td>'
             . '<td class="value">'
-            .   '<p>'
-            .     '<input id="cs-preview-order-number" type="text" class="input-text" value="%s">'
-            .     ' <button type="button" id="cs-preview-start" class="scalable go" style="margin-left: 10px;">'
-            .       '<span><span><span>%s</span></span></span>'
-            .     '</button>'
-            .   '</p>'
-            .   '<p class="note">%s</p>'
-            .   '<p id="cs-preview-error" style="color:#c00;display:none;margin-top:6px;"></p>'
+            . '<p>'
+            . '<input id="cs-preview-order-number" type="text" class="input-text" value="%s">'
+            . ' <button type="button" id="cs-preview-start" class="scalable go" style="margin-left: 10px;">'
+            . '<span><span><span>%s</span></span></span>'
+            . '</button>'
+            . '</p>'
+            . '<p class="note">%s</p>'
+            . '<p id="cs-preview-error" style="color:#c00;display:none;margin-top:6px;"></p>'
             . '</td>'
             . '</tr>'
             . '<script>%s</script>',
@@ -83,7 +84,7 @@ class MageAustralia_CheckoutSuccess_Block_Adminhtml_System_Config_Form_Field_Fro
      * route (`frontName/mageaustralia_checkoutsuccess/preview/url`). Easiest
      * fix: generate via the Symfony route name + prepend the base URL.
      *
-     * CSRF protection comes from the form_key POSTed by the JS — the URL
+     * CSRF protection comes from the form_key POSTed by the JS - the URL
      * itself doesn't need the legacy `/key/<secret>/` admin segment.
      */
     protected function _buildAdminSignUrl(): string
@@ -95,8 +96,8 @@ class MageAustralia_CheckoutSuccess_Block_Adminhtml_System_Config_Form_Field_Fro
             'admin/routers/adminhtml/args/frontName',
         ) ?: 'admin';
 
-        $context = new \Symfony\Component\Routing\RequestContext();
-        $path = \Maho\Routing\RouteCollectionBuilder::createGenerator($context)
+        $context = new RequestContext();
+        $path = RouteCollectionBuilder::createGenerator($context)
             ->generate('mageaustralia.checkoutsuccess.adminhtml.preview.url', [
                 '_adminFrontName' => $adminFrontName,
             ]);
@@ -150,7 +151,7 @@ class MageAustralia_CheckoutSuccess_Block_Adminhtml_System_Config_Form_Field_Fro
             return;
         }
 
-        // Open the tab synchronously inside the user-gesture handler — if we
+        // Open the tab synchronously inside the user-gesture handler - if we
         // wait for the fetch() to resolve first, browsers treat window.open()
         // as a popup and block it. We point the placeholder tab at about:blank
         // and update its location once the signed URL comes back.
@@ -165,7 +166,7 @@ class MageAustralia_CheckoutSuccess_Block_Adminhtml_System_Config_Form_Field_Fro
             body.append('oid', oid);
             body.append('store', storeKey);
             body.append('form_key', formKey);
-            // mahoFetch is Maho's wrapped fetch — same-origin creds + JSON
+            // mahoFetch is Maho's wrapped fetch - same-origin creds + JSON
             // parsing + ajaxExpired handling are built in.
             const data = await mahoFetch(signUrl, {
                 method: 'POST',

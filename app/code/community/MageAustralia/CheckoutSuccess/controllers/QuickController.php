@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Maho\Config\Route;
+
 /**
  * Maho
  *
@@ -26,7 +28,7 @@ declare(strict_types=1);
  */
 class MageAustralia_CheckoutSuccess_QuickController extends Mage_Core_Controller_Front_Action
 {
-    #[Maho\Config\Route('/mageaustralia_checkoutsuccess/quick/register', methods: ['POST'])]
+    #[Route('/mageaustralia_checkoutsuccess/quick/register', methods: ['POST'])]
     public function registerAction(): void
     {
         $request = $this->getRequest();
@@ -75,11 +77,11 @@ class MageAustralia_CheckoutSuccess_QuickController extends Mage_Core_Controller
 
         $websiteId = (int) Mage::app()->getStore()->getWebsiteId();
 
-        // Reject if email is already a registered customer (defence in depth —
+        // Reject if email is already a registered customer (defence in depth -
         // the success-page block already hides the CTA in that case).
         $existing = Mage::getModel('customer/customer')->setWebsiteId($websiteId)->loadByEmail($email);
         if ($existing->getId()) {
-            $checkoutSession->addError(Mage::helper('mageaustralia_checkoutsuccess')->__('An account already exists for this email — please log in instead.'));
+            $checkoutSession->addError(Mage::helper('mageaustralia_checkoutsuccess')->__('An account already exists for this email - please log in instead.'));
             $this->_redirectToSuccess();
             return;
         }
@@ -114,7 +116,7 @@ class MageAustralia_CheckoutSuccess_QuickController extends Mage_Core_Controller
 
             $this->_redirect('sales/order/view', ['order_id' => $orderId]);
             return;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // Log the real reason for support; surface only a generic message
             // to avoid leaking internal exception text to customers.
             Mage::logException($e);

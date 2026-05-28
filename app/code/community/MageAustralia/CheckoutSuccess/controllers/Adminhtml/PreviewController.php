@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Maho\Config\Route;
+
 /**
  * Maho
  *
@@ -16,13 +18,13 @@ declare(strict_types=1);
  * predispatch observer, so a leaked URL only exposes that one order.
  *
  * Because the controller is in the adminhtml area, Maho automatically
- * enforces admin authentication + ACL — no manual session check needed.
+ * enforces admin authentication + ACL - no manual session check needed.
  */
 class MageAustralia_CheckoutSuccess_Adminhtml_PreviewController extends Mage_Adminhtml_Controller_Action
 {
     public const ADMIN_RESOURCE = 'system/config/mageaustralia_checkoutsuccess';
 
-    #[\Override]
+    #[Override]
     public function preDispatch(): static
     {
         // CSRF: require a valid form_key on the POSTed sign request, not just
@@ -32,7 +34,7 @@ class MageAustralia_CheckoutSuccess_Adminhtml_PreviewController extends Mage_Adm
         return parent::preDispatch();
     }
 
-    #[Maho\Config\Route('/admin/mageaustralia_checkoutsuccess/preview/url', methods: ['POST'])]
+    #[Route('/admin/mageaustralia_checkoutsuccess/preview/url', methods: ['POST'])]
     public function urlAction(): void
     {
         $this->getResponse()->setHeader('Content-Type', 'application/json');

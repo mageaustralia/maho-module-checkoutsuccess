@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Maho\DataObject;
+
 /**
  * Maho
  *
@@ -28,7 +30,7 @@ class MageAustralia_CheckoutSuccess_Block_Sales_Recurring_Profile_Schedule exten
             return [];
         }
         $collection = Mage::getResourceModel('sales/recurring_profile_collection')
-            ->addFieldToFilter('profile_id', ['in' => array_values(array_filter(array_map('intval', $ids)))]);
+            ->addFieldToFilter('profile_id', ['in' => array_values(array_filter(array_map(intval(...), $ids)))]);
         return iterator_to_array($collection);
     }
 
@@ -44,16 +46,16 @@ class MageAustralia_CheckoutSuccess_Block_Sales_Recurring_Profile_Schedule exten
 
     /**
      * Signature mirrors Mage_Core_Block_Template::getObjectData() for
-     * inheritance compatibility — accepts any Maho\DataObject and returns
+     * inheritance compatibility - accepts any Maho\DataObject and returns
      * a string-ish value.
      */
-    #[\Override]
-    public function getObjectData(Maho\DataObject $object, $key)
+    #[Override]
+    public function getObjectData(DataObject $object, $key)
     {
         return (string) $object->getData($key);
     }
 
-    #[\Override]
+    #[Override]
     protected function _toHtml()
     {
         if (!$this->isEnabled() || empty($this->getRecurringProfiles())) {

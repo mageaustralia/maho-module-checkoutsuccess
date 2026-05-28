@@ -13,7 +13,7 @@
       Override the core success block's template + register every module-owned
       block as a child of checkout.success. The container template walks the
       slot config and calls getChildHtml(<block_name>) for each, so layout
-      order here doesn't matter — slot config defines display order.
+      order here doesn't matter - slot config defines display order.
 
       Disabled state: container template short-circuits and falls back to a
       plain stock-style success message. No need to gate the layout updates.
@@ -45,7 +45,7 @@
                    name="sales.order.view"
                    template="mageaustralia/checkoutsuccess/sales/order/view.phtml">
                 <!--
-                  Items child block. Template MUST be set here — the parent
+                  Items child block. Template MUST be set here - the parent
                   Mage_Sales_Block_Items_Abstract::_construct() doesn't pick
                   a default, so omitting it results in an empty render.
                 -->

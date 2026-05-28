@@ -40,6 +40,6 @@
 "Order is missing a customer email; cannot register.","Order is missing a customer email; cannot register."
 "Passwords did not match.","Passwords did not match."
 "Password must be at least 8 characters.","Password must be at least 8 characters."
-"An account already exists for this email — please log in instead.","An account already exists for this email — please log in instead."
+"An account already exists for this email  -  please log in instead.","An account already exists for this email  -  please log in instead."
 "Your account has been created.","Your account has been created."
 "Could not create your account. Please try again or contact support.","Could not create your account. Please try again or contact support."
