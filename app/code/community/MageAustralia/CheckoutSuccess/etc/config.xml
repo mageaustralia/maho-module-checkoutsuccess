@@ -30,6 +30,15 @@
                 </setup>
             </mageaustralia_checkoutsuccess_setup>
         </resources>
+        <template>
+            <email>
+                <mageaustralia_checkoutsuccess_claim_orders>
+                    <label>Checkout Success - Claim previous orders</label>
+                    <file>mageaustralia/checkoutsuccess/claim_orders.html</file>
+                    <type>html</type>
+                </mageaustralia_checkoutsuccess_claim_orders>
+            </email>
+        </template>
     </global>
 
     <frontend>

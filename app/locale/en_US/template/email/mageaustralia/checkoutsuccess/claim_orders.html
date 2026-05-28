@@ -1,0 +1,37 @@
+<!--@subject Add your previous orders to your new account @-->
+<!--@vars
+{"var customer_name":"Customer Name","var order_count":"Number of previous orders","var claim_url":"Order claim link"}
+@-->
+
+<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333;max-width:600px;margin:0 auto;">
+    <p>Hi {{var customer_name}},</p>
+
+    <p>
+        Thanks for creating an account. We found {{var order_count}} earlier
+        order(s) placed with this email address before you registered.
+    </p>
+
+    <p>
+        If those orders are yours, click the button below to add them to your
+        account so you can track them from your order history. The link is valid
+        for 7 days.
+    </p>
+
+    <p style="text-align:center;margin:28px 0;">
+        <a href="{{var claim_url}}"
+           style="background:#1979c3;color:#fff;text-decoration:none;padding:12px 22px;border-radius:3px;display:inline-block;">
+            Add my previous orders
+        </a>
+    </p>
+
+    <p style="font-size:12px;color:#777;">
+        If you did not create this account, you can safely ignore this email and
+        no orders will be linked. The link only ever attaches orders placed with
+        this email address.
+    </p>
+
+    <p style="font-size:12px;color:#777;">
+        Button not working? Copy and paste this address into your browser:<br/>
+        {{var claim_url}}
+    </p>
+</div>

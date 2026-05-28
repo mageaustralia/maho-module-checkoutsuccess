@@ -29,6 +29,12 @@ class MageAustralia_CheckoutSuccess_Helper_Data extends Mage_Core_Helper_Abstrac
     public const XML_PATH_SLOT_PREFIX     = 'mageaustralia_checkoutsuccess/mockup/slot_';
     public const XML_PATH_MOCKUPSET_PREF  = 'mageaustralia_checkoutsuccess/mockupsets/block';
 
+    /** Lifetime (seconds) of an emailed order-claim link. 7 days. */
+    public const ORDER_CLAIM_TTL = 604800;
+
+    /** Email template registered in config.xml for the order-claim link. */
+    public const CLAIM_EMAIL_TEMPLATE = 'mageaustralia_checkoutsuccess_claim_orders';
+
     /** @var list<string> */
     public const SLOTS = ['top', 'middleleft', 'middleright', 'bottom'];
 
@@ -110,6 +116,35 @@ class MageAustralia_CheckoutSuccess_Helper_Data extends Mage_Core_Helper_Abstrac
             return false;
         }
         return hash_equals($this->signPreviewId($incrementId), $signature);
+    }
+
+    /**
+     * Sign a one-off "claim my previous orders" authorisation. The link is
+     * emailed to the address being claimed, so possession of the link proves
+     * inbox ownership. Binds the customer id, the customer's current email,
+     * and an absolute expiry timestamp - changing any of them invalidates the
+     * signature. 32 hex chars (128 bits) of HMAC-SHA256 under the install
+     * crypt key.
+     */
+    public function signOrderClaim(int $customerId, string $email, int $expiry): string
+    {
+        $payload = 'claim:' . $customerId . ':' . $email . ':' . $expiry;
+        return substr(hash_hmac('sha256', $payload, $this->_getSigningSecret()), 0, 32);
+    }
+
+    /**
+     * Verify a claim signature. Returns false for malformed input, an expired
+     * link, or a signature mismatch (timing-safe compare).
+     */
+    public function verifyOrderClaim(int $customerId, string $email, int $expiry, string $signature): bool
+    {
+        if ($customerId <= 0 || $email === '' || $expiry <= 0 || $signature === '') {
+            return false;
+        }
+        if ($expiry < time()) {
+            return false;
+        }
+        return hash_equals($this->signOrderClaim($customerId, $email, $expiry), $signature);
     }
 
     protected function _getSigningSecret(): string
