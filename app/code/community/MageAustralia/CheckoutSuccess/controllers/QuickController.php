@@ -252,7 +252,11 @@ class MageAustralia_CheckoutSuccess_QuickController extends Mage_Core_Controller
                 '_query'  => ['cid' => $customerId, 'exp' => $expiry, 'sig' => $signature],
             ]);
 
-            /** @var Mage_Core_Model_Email_Template $mail */
+            // No @var annotation: installs with an SMTP module (e.g. SMTP Pro)
+            // rewrite core/email_template to a subclass, so a fixed type hint
+            // here trips strict PHPStan downstream. The base API we call
+            // (setDesignConfig / loadDefault / setSender* / send) exists on
+            // every core/email_template subtype.
             $mail = Mage::getModel('core/email_template');
             $mail->setDesignConfig(['area' => 'frontend', 'store' => $storeId]);
             $mail->loadDefault(MageAustralia_CheckoutSuccess_Helper_Data::CLAIM_EMAIL_TEMPLATE);
