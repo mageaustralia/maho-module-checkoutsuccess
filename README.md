@@ -101,10 +101,20 @@ On the success page, guests see a "Create account for next time" CTA. The form p
 - Refuses if there's no order in `checkout/session` (must come from the success flow).
 - Pulls the email **from the order**, not from the form - guests can't claim a different email.
 - Refuses if a customer with that email already exists.
-- Requires password ≥ 8 chars and `confirmation` to match.
-- Creates the customer, logs them in, and re-assigns any other matching guest orders (same `customer_email`, `customer_id IS NULL`) to the new customer so they appear in My Orders.
+- Requires password >= 8 chars and `confirmation` to match.
+- Creates the customer and links **only the current checkout-session order** to it.
+- Activation/login honours the store's `customer/create_account/confirm` setting: when email confirmation is required the account is created unconfirmed, the standard confirmation email is sent, and the customer is not auto-logged-in; otherwise they're logged in immediately.
 
-The guest-order claim step matches Magento's general guest-to-customer linking semantics: anyone who places a guest order and then registers with that email inherits previous guest orders for that email. If you don't want this, the only path that triggers it is this controller's `registerAction` - remove the `Mage::getResourceModel('sales/order_collection')->...->walk(...)` block in `controllers/QuickController.php`.
+### Claiming earlier guest orders
+
+The flow deliberately does **not** bulk-link every guest order that shares the email at register time. A guest checkout accepts any email, so sweeping by email would let someone who entered another person's address pull that person's order history into a fresh account.
+
+Instead, if other guest orders share the email, the module emails a **signed claim link** to that address. Clicking it (`/mageaustralia_checkoutsuccess/quick/claim`) proves the registrant controls the inbox, and only then are the remaining guest orders (`customer_email` match, `customer_id IS NULL`) linked to the account.
+
+- The link is a stateless HMAC-SHA256 (128-bit) binding `customer_id` + the customer's current email + a 7-day expiry, keyed by the install crypt key. Forged, expired, or stale-email links are rejected (`hash_equals`).
+- No login is required to click it; the orders only ever attach to the account created for that exact email, so a forwarded link is harmless.
+- Idempotent - already-linked orders aren't re-matched.
+- The claim email is the registered transactional template `mageaustralia_checkoutsuccess_claim_orders` (`app/locale/en_US/template/email/mageaustralia/checkoutsuccess/claim_orders.html`).
 
 ## Files
 
@@ -115,6 +125,7 @@ The guest-order claim step matches Magento's general guest-to-customer linking s
 | `app/design/frontend/base/default/{layout,template}/` | Frontend layout + templates |
 | `app/design/adminhtml/default/default/layout/mageaustralia_checkoutsuccess.xml` | Loads the sortable.js + admin.css on the config-edit screen |
 | `app/locale/en_US/MageAustralia_CheckoutSuccess.csv` | Translatable strings |
+| `app/locale/en_US/template/email/mageaustralia/checkoutsuccess/claim_orders.html` | Transactional email for the previous-orders claim link |
 | `public/skin/frontend/base/default/css/mageaustralia/checkoutsuccess.css` | Frontend grid styling |
 | `public/skin/adminhtml/default/default/mageaustralia/checkoutsuccess/admin.css` | Sortable field styling |
 | `public/js/mageaustralia/checkoutsuccess/sortable.js` | Vanilla HTML5 drag-and-drop for the slot picker |
@@ -140,7 +151,8 @@ If you used the manual symlink/copy path, remove the symlink, declaration XML, d
 - All admin endpoints are in the adminhtml area → automatic admin auth + ACL (`system/config/mageaustralia_checkoutsuccess`).
 - Admin endpoint forces `form_key` validation (`_setForcedFormKeyActions`).
 - The preview URL is signed with HMAC-SHA256 keyed by the Maho crypt key; verification is constant-time via `hash_equals`.
-- The guest `registerAction` validates `form_key`, takes email from the order (not the POST), and refuses if the email already has an account.
+- The guest `registerAction` validates `form_key`, takes email from the order (not the POST), and refuses if the email already has an account. It links only the registrant's current order; earlier guest orders are linked only after the emailed claim link is followed (proof of inbox ownership), so a guest order placed under someone else's email can't be used to harvest their history.
+- The order-claim link is a separate HMAC-SHA256 signature (binds customer_id + email + 7-day expiry, `hash_equals`), emailed to the address being claimed.
 - The custom-HTML token substitution HTML-escapes order values before substitution (prevents stored XSS via crafted customer email).
 - The frontend success controller's `reviewAction` is **POST-only** in core Maho. The module doesn't change that.
 
