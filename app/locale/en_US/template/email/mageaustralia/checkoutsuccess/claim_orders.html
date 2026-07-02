@@ -2,36 +2,50 @@
 <!--@vars
 {"var customer_name":"Customer Name","var order_count":"Number of previous orders","var claim_url":"Order claim link"}
 @-->
-
-<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333;max-width:600px;margin:0 auto;">
-    <p>Hi {{var customer_name}},</p>
-
-    <p>
-        Thanks for creating an account. We found {{var order_count}} earlier
-        order(s) placed with this email address before you registered.
-    </p>
-
-    <p>
-        If those orders are yours, click the button below to add them to your
-        account so you can track them from your order history. The link is valid
-        for 7 days.
-    </p>
-
-    <p style="text-align:center;margin:28px 0;">
-        <a href="{{var claim_url}}"
-           style="background:#1979c3;color:#fff;text-decoration:none;padding:12px 22px;border-radius:3px;display:inline-block;">
-            Add my previous orders
-        </a>
-    </p>
-
-    <p style="font-size:12px;color:#777;">
-        If you did not create this account, you can safely ignore this email and
-        no orders will be linked. The link only ever attaches orders placed with
-        this email address.
-    </p>
-
-    <p style="font-size:12px;color:#777;">
-        Button not working? Copy and paste this address into your browser:<br/>
-        {{var claim_url}}
-    </p>
-</div>
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="color-scheme" content="light dark">
+    <title>Add your previous orders to your new account</title>
+</head>
+<body style="margin:0; padding:0; width:100%; background-color:#f4f5f7; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;">
+    <div style="display:none; max-height:0; overflow:hidden; opacity:0; mso-hide:all;">We found {{var order_count}} earlier order(s) placed with your email - add them to your account.</div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f5f7;">
+        <tr>
+            <td align="center" style="padding:24px 12px;">
+                <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%; max-width:600px; background-color:#ffffff; border-radius:8px; overflow:hidden; border:1px solid #e5e7eb;">
+                    <tr>
+                        <td style="background-color:#166534; padding:20px 28px;">
+                            <span style="font-family:Arial,Helvetica,sans-serif; font-size:18px; line-height:24px; font-weight:bold; color:#ffffff;">Add your previous orders</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:28px;">
+                            <p style="margin:0 0 16px; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:22px; color:#111827;">Hi {{var customer_name}},</p>
+                            <p style="margin:0 0 16px; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:22px; color:#111827;">Thanks for creating an account. We found {{var order_count}} earlier order(s) placed with this email address before you registered.</p>
+                            <p style="margin:0 0 24px; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:22px; color:#111827;">If those orders are yours, click the button below to add them to your account so you can track them from your order history. The link is valid for 7 days.</p>
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td align="center" bgcolor="#166534" style="border-radius:6px;">
+                                        <a href="{{var claim_url}}" target="_blank" style="display:inline-block; padding:12px 28px; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:20px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:6px;">Add my previous orders</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p style="margin:24px 0 16px; font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:18px; color:#777777;">If you did not create this account, you can safely ignore this email and no orders will be linked. The link only ever attaches orders placed with this email address.</p>
+                            <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:18px; color:#777777;">Button not working? Copy and paste this address into your browser:<br/>{{var claim_url}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:18px 28px; background-color:#f9fafb; border-top:1px solid #eef0f2;">
+                            <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:18px; color:#9ca3af;">This link is valid for 7 days.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
