@@ -110,6 +110,21 @@ class MageAustralia_CheckoutSuccess_QuickController extends Mage_Core_Controller
                 ->setCustomerGroupId((int) $customer->getGroupId())
                 ->save();
 
+            // Give the new account the address book it would have had if they had registered
+            // during checkout. Without this the customer lands on an account with orders but no
+            // saved addresses, and has to retype them on their next purchase.
+            //
+            // Deliberately AFTER $customer->save() and swallowed: adding the addresses to the
+            // customer before saving (the way Mage_Checkout_Model_Type_Onepage does) makes the
+            // whole save fail on an address that does not pass customer-address validation, and
+            // the shopper would lose the account over an address they cannot see. The account and
+            // the order link are what matter here; the address book is a convenience.
+            try {
+                $this->_copyOrderAddressesToCustomer($order, $customer);
+            } catch (Exception $addressError) {
+                Mage::logException($addressError);
+            }
+
             // Activation / login honours the store's confirmation setting.
             if ($customer->isConfirmationRequired()) {
                 $this->_trySendAccountEmail($customer, 'confirmation', $storeId);
@@ -217,6 +232,108 @@ class MageAustralia_CheckoutSuccess_QuickController extends Mage_Core_Controller
     protected function _redirectToSuccess(): void
     {
         $this->_redirect('checkout/onepage/success');
+    }
+
+    /**
+     * Copy the order's billing and shipping addresses into the new account's address book and
+     * make them the defaults.
+     *
+     * Registering during checkout populates the address book for free: FireCheckout's
+     * _prepareNewCustomerQuote() exports the quote addresses onto the customer before saving.
+     * Registering here, after the order, skipped that entirely - so these accounts ended up with
+     * orders but an empty address book, and the shopper had to retype everything next time.
+     *
+     * Billing and shipping are compared and collapsed when they match, which is the common case;
+     * otherwise the shopper would see the same address listed twice.
+     *
+     * Defaults need the second customer save: a standalone Mage_Customer_Model_Address::save()
+     * writes the address but never touches default_billing / default_shipping, which are
+     * attributes on the customer and are only maintained when saving through the customer's own
+     * address collection.
+     */
+    protected function _copyOrderAddressesToCustomer(
+        Mage_Sales_Model_Order $order,
+        Mage_Customer_Model_Customer $customer,
+    ): void {
+        $customerId = (int) $customer->getId();
+        if (!$customerId) {
+            return;
+        }
+
+        $billingId = null;
+        $shippingId = null;
+
+        if ($orderBilling = $order->getBillingAddress()) {
+            $billingId = $this->_storeCustomerAddress($orderBilling, $customerId);
+        }
+
+        $orderShipping = $order->getShippingAddress();
+        if ($orderShipping) {
+            // Virtual orders have no shipping address; identical addresses are stored once.
+            if ($billingId && $this->_addressesMatch($orderBilling, $orderShipping)) {
+                $shippingId = $billingId;
+            } else {
+                $shippingId = $this->_storeCustomerAddress($orderShipping, $customerId);
+            }
+        }
+
+        if (!$billingId && !$shippingId) {
+            return;
+        }
+
+        $customer->setDefaultBilling($billingId ?: $shippingId)
+            ->setDefaultShipping($shippingId ?: $billingId)
+            ->save();
+    }
+
+    /**
+     * Persist one order address as a customer address. Returns its id, or null if it could not
+     * be saved (an order address is not held to customer-address validation rules, so a legacy
+     * or gateway-supplied address can legitimately fail here).
+     */
+    protected function _storeCustomerAddress(
+        Mage_Sales_Model_Order_Address $orderAddress,
+        int $customerId,
+    ): ?int {
+        try {
+            /** @var Mage_Customer_Model_Address $address */
+            $address = Mage::getModel('customer/address');
+            $address->setData($orderAddress->getData())
+                ->setId(null)
+                ->setEntityId(null)
+                ->setCustomerAddressId(null)
+                ->setParentId(null)
+                ->setCustomerId($customerId);
+
+            $address->save();
+
+            return (int) $address->getId() ?: null;
+        } catch (Exception $e) {
+            Mage::logException($e);
+            return null;
+        }
+    }
+
+    /**
+     * True when two order addresses describe the same place, so the address book does not end up
+     * holding a duplicate. Compares only the fields that identify an address.
+     */
+    protected function _addressesMatch(
+        Mage_Sales_Model_Order_Address $a,
+        Mage_Sales_Model_Order_Address $b,
+    ): bool {
+        $fields = ['firstname', 'lastname', 'company', 'street', 'city', 'region', 'region_id', 'postcode', 'country_id', 'telephone'];
+
+        foreach ($fields as $field) {
+            $left = is_array($a->getData($field)) ? implode("\n", $a->getData($field)) : (string) $a->getData($field);
+            $right = is_array($b->getData($field)) ? implode("\n", $b->getData($field)) : (string) $b->getData($field);
+
+            if (trim(strtolower($left)) !== trim(strtolower($right))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
