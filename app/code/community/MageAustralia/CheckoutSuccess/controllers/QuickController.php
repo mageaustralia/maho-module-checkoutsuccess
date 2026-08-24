@@ -89,7 +89,9 @@ class MageAustralia_CheckoutSuccess_QuickController extends Mage_Core_Controller
         }
 
         try {
-            /** @var Mage_Customer_Model_Customer $customer */
+            // No @var here on purpose: customer/customer is commonly rewritten, and pinning the
+            // tag to Mage_Customer_Model_Customer contradicts the resolved class under static
+            // analysis. Let it infer whatever the store's rewrite actually returns.
             $customer = Mage::getModel('customer/customer');
             $customer->setWebsiteId($websiteId)
                 ->setStoreId($storeId)
