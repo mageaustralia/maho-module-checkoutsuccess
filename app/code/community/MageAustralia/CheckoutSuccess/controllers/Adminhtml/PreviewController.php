@@ -30,7 +30,10 @@ class MageAustralia_CheckoutSuccess_Adminhtml_PreviewController extends Mage_Adm
         // CSRF: require a valid form_key on the POSTed sign request, not just
         // the admin secret key in the URL. Belt-and-suspenders against any
         // cross-origin POST that happens to know the admin route.
-        $this->_setForcedFormKeyActions(['url']);
+        // Removed in Maho 26.9, where core key-checks every admin request itself
+        if (method_exists($this, '_setForcedFormKeyActions')) {
+            $this->_setForcedFormKeyActions(['url']);
+        }
         return parent::preDispatch();
     }
 
